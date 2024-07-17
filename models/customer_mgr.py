@@ -8,7 +8,7 @@ class CustomerManager:
     CustomerManagerInst = None
 
     def __init__(self):
-        self.customerStore = customerStore.customer_map
+        self.customerStore = {}
 
     @staticmethod
     def get_instance():

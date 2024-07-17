@@ -8,7 +8,7 @@ class DriverManager:
     DriverManagerInst = None
 
     def __init__(self):
-        self.driverStore = driverStore.driver_map
+        self.driverStore = {}
 
     @staticmethod
     def get_instance():
