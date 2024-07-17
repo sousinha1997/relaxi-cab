@@ -4,7 +4,7 @@ from models.customer_mgr import CustomerManager
 
 class CustomerServiceImpl:
 
-    async def signup(self, name: str, email: str, phone_number: str, password: str) -> Customer:
+    async def signup(self, name: str, email: str, phone_number: str, password: str) -> dict:
         cusMgrsInst = CustomerManager.get_instance()
         customer = cusMgrsInst.get_customer(phone_number)
 
@@ -15,7 +15,7 @@ class CustomerServiceImpl:
         else:
             raise HTTPException(status_code=409, detail="User with phone already exists")
 
-    async def login(self, login_id: str, password: str) -> Customer:
+    async def login(self, login_id: str, password: str) -> dict:
         cusMgrsInst = CustomerManager.get_instance()
         customersMap = cusMgrsInst.get_customer_map()
 
