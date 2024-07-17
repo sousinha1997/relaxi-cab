@@ -40,6 +40,16 @@ async def login(login_id: str = Body(...), password: str = Body(...)):
 
     return {"message": "Successfully logged in!","lastLoginAt":str(customerObj.loginTime)}
 
+@app.get("/health-check")
+async def health_check():
+
+    state_healthy = True
+    # ...
+    if state_healthy: 
+        return {"status": "no issues reported"}
+    else:
+        return {"status": "issues reported"}
+
 @app.get("/")
 async def root():
     return {"message": "Hello !"}
