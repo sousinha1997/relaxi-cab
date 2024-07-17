@@ -1,43 +1,31 @@
-from fastapi import FastAPI, HTTPException, Body
-from models.customer_mgr import CustomerManager
-from models.customer import Customer
-
-
+from fastapi import FastAPI
+from fastapi import FastAPI, Body ,  HTTPException
+from customer.customer_service_impl import CustomerServiceImpl
+from driver.driver_service_impl import DriverServiceImpl
 
 app = FastAPI()
+customer_service = CustomerServiceImpl()
+driver_service = DriverServiceImpl()
 
 @app.post("/customer/signup")
 async def signup(name: str = Body(...), email: str = Body(...), phone_number: str = Body(...), password: str = Body(...)):
-
-    cusMgrsInst = CustomerManager.get_instance()
-
-    customer = cusMgrsInst.get_customer(phone_number)
-    
-
-    if not customer:
-        customer = Customer(name,password,phone_number,email)
-        cusMgrsInst.add_customer(phone_number,customer)
-        return {"userID":str(customer.customer_id),"UserCreatedAt":str(customer.creationTime)}
-    else:
-        raise HTTPException(status_code=409,detail="User with phone alraedy exists")
-
+    status = await customer_service.signup(name, email, phone_number, password)
+    return status
 
 @app.post("/customer/login")
 async def login(login_id: str = Body(...), password: str = Body(...)):
-    
-    cusMgrsInst = CustomerManager.get_instance()
+    status = await customer_service.login(login_id, password)
+    return status  
 
-    customersMap = cusMgrsInst.get_customer_map()
+@app.post("/driver/signup")
+async def signup(name: str = Body(...), email: str = Body(...), phone_number: str = Body(...), password: str = Body(...), kycID: str = Body(...), service_type: str = Body(...)):
+    status = await driver_service.signup(name, email, phone_number, password, kycID, service_type)
+    return status
 
-    if login_id not in customersMap:
-        return {"error": "User not found"}
-
-    customerObj = customersMap[login_id]
-
-    if not customerObj.verify_password(password):
-        return {"error": "Incorrect password"}
-
-    return {"message": "Successfully logged in!","lastLoginAt":str(customerObj.loginTime)}
+@app.post("/driver/login")
+async def login(login_id: str = Body(...), password: str = Body(...)):
+    status = await driver_service.login(login_id, password)
+    return status  
 
 @app.get("/health-check")
 async def health_check():
@@ -51,4 +39,4 @@ async def health_check():
 
 @app.get("/")
 async def root():
-    return {"message": "Hello !"}
+    return {"message": "Hello FastAPI from your Uber-like app!"}

@@ -5,3 +5,5 @@ class Rating(enumerate):
     THREE_STARS = 3
     FOUR_STARS = 4
     FIVE_STARS = 5
+
+
