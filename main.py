@@ -1,5 +1,4 @@
-from fastapi import FastAPI
-from fastapi import FastAPI, Body
+from fastapi import FastAPI, HTTPException, Body
 from models.customer_mgr import CustomerManager
 from models.customer import Customer
 
@@ -20,7 +19,7 @@ async def signup(name: str = Body(...), email: str = Body(...), phone_number: st
         cusMgrsInst.add_customer(phone_number,customer)
         return {"userID":str(customer.customer_id),"UserCreatedAt":str(customer.creationTime)}
     else:
-        return {"message": "User alraedy exists","UserCreatedAt":str(customer.creationTime)}
+        raise HTTPException(status_code=409,detail="User with phone alraedy exists")
 
 
 @app.post("/customer/login")
